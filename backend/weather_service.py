@@ -3,26 +3,17 @@
 import os
 import requests
 from dotenv import load_dotenv
+
 load_dotenv()
-API_KEY = os.environ.get("OPENWEATHER_API_KEY")
+API_KEY = os.environ.get("OPENWEATHER_API_KEY")  # ← single source of truth
 BASE_URL = "https://api.openweathermap.org/data/2.5"
 
 
 def get_current_weather(city: str, units: str = "metric") -> dict:
-    """
-    Fetch current weather for a given city using OpenWeather API.
-
-    Args:
-        city:  City name (e.g., "London" or "London,UK")
-        units: "metric" (°C) | "imperial" (°F) | "standard" (K)
-
-    Returns:
-        dict with weather data, or dict with "error" key on failure.
-    """
     try:
         params = {
-            "q": city,
-            "appid": OPENWEATHER_API_KEY,
+            "q":     city,
+            "appid": API_KEY,   # ← was OPENWEATHER_API_KEY (undefined variable)
             "units": units,
         }
         response = requests.get(f"{BASE_URL}/weather", params=params, timeout=10)
@@ -41,7 +32,7 @@ def get_current_weather(city: str, units: str = "metric") -> dict:
             "condition":   raw["weather"][0]["main"],
             "description": raw["weather"][0]["description"],
             "icon":        raw["weather"][0]["icon"],
-            "visibility":  raw.get("visibility", 0) // 1000,  # km
+            "visibility":  raw.get("visibility", 0) // 1000,
             "pressure":    raw["main"]["pressure"],
             "units":       units,
         }
@@ -62,29 +53,17 @@ def get_current_weather(city: str, units: str = "metric") -> dict:
 
 
 def get_forecast(city: str, days: int = 3, units: str = "metric") -> dict:
-    """
-    Fetch 3-hour-step forecast (up to 5 days) for a city.
-
-    Args:
-        city:  City name
-        days:  Number of days of forecast (1–5)
-        units: unit system
-
-    Returns:
-        dict with daily summary list, or dict with "error" key.
-    """
     try:
         params = {
-            "q": city,
-            "appid": OPENWEATHER_API_KEY,
+            "q":     city,
+            "appid": API_KEY,   # ← was OPENWEATHER_API_KEY (undefined variable)
             "units": units,
-            "cnt": min(days * 8, 40),  # 8 readings per day
+            "cnt":   min(days * 8, 40),
         }
         response = requests.get(f"{BASE_URL}/forecast", params=params, timeout=10)
         response.raise_for_status()
         raw = response.json()
 
-        # Summarise by day
         from collections import defaultdict
         days_map = defaultdict(list)
         for item in raw["list"]:
@@ -96,17 +75,17 @@ def get_forecast(city: str, days: int = 3, units: str = "metric") -> dict:
             temps = [e["main"]["temp"] for e in entries]
             desc  = entries[len(entries) // 2]["weather"][0]["description"]
             daily.append({
-                "date":    date,
-                "temp_min": round(min(temps), 1),
-                "temp_max": round(max(temps), 1),
+                "date":        date,
+                "temp_min":    round(min(temps), 1),
+                "temp_max":    round(max(temps), 1),
                 "description": desc,
             })
 
         return {
-            "city":    raw["city"]["name"],
-            "country": raw["city"]["country"],
+            "city":     raw["city"]["name"],
+            "country":  raw["city"]["country"],
             "forecast": daily,
-            "units":   units,
+            "units":    units,
         }
 
     except requests.exceptions.HTTPError as e:
