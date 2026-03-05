@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AI Chat — Nimbus</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="chat-page">
+<canvas id="bgCanvas"></canvas>
+<div class="c-dot"></div><div class="c-ring"></div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">⛅</div><span class="logo-word">NIMBUS</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"     class="nav-link">Home</a>
+    <a href="chat.html"      class="nav-link active">AI Chat</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="forecast.html"  class="nav-link">Forecast</a>
+  </div>
+  <div class="nav-r">
+    <button class="theme-btn" id="themeToggle"><span id="themeIcon">☀️</span></button>
+  </div>
+  <button class="hamburger" id="hamburger">☰</button>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="index.html">Home</a><a href="chat.html">AI Chat</a>
+  <a href="dashboard.html">Dashboard</a><a href="forecast.html">Forecast</a>
+</div>
+
+<div class="chat-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="chat-sidebar">
+    <div class="sb-inner">
+      <div class="sb-label">Quick Asks</div>
+      <div class="sb-chips">
+        <button class="sb-chip" data-q="What's the weather in Tokyo right now?">🗼 Tokyo now</button>
+        <button class="sb-chip" data-q="Give me a 5-day forecast for London">🎡 London forecast</button>
+        <button class="sb-chip" data-q="Is it raining in Mumbai today?">🌧️ Mumbai rain?</button>
+        <button class="sb-chip" data-q="Temperature in New York right now">🗽 New York temp</button>
+        <button class="sb-chip" data-q="Weather in Paris today">🗼 Paris today</button>
+        <button class="sb-chip" data-q="5 day forecast for Dubai">🏙️ Dubai forecast</button>
+        <button class="sb-chip" data-q="Is it snowing in Moscow?">❄️ Moscow snow?</button>
+        <button class="sb-chip" data-q="Current humidity in Singapore">💧 Singapore</button>
+        <button class="sb-chip" data-q="Weather in Sydney Australia">🦘 Sydney</button>
+        <button class="sb-chip" data-q="What should I wear in Berlin today?">🧥 Berlin outfit</button>
+      </div>
+      <div class="sb-rule"></div>
+      <div class="sb-label">Function Call Log</div>
+      <div class="fn-log" id="fnLog">
+        <div class="fn-empty">Function calls appear here in real-time as the AI uses them.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT -->
+  <main class="chat-main">
+    <div class="chat-topbar">
+      <div class="chat-topbar-l">
+        <div class="chat-av">🤖</div>
+        <div>
+          <div class="chat-name">NIMBUS AI</div>
+          <div class="chat-status"><span class="status-dot"></span>Online · Llama 3.3 70B via Groq</div>
+        </div>
+      </div>
+      <button class="clear-btn" id="clearChat">✕ Clear</button>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="msg-row msg-l">
+        <div class="msg-av av-ai">🤖</div>
+        <div class="bubble b-ai">
+          <p>Hello. I'm <strong>Nimbus AI</strong> — your intelligent weather terminal, powered by <strong>Llama 3.3</strong> and live function calling.</p>
+          <p style="margin-top:.5rem;color:var(--text2);font-size:.82rem;font-style:italic">Try asking me something like:</p>
+          <div class="quick-chips">
+            <button class="qchip" onclick="inject('What is the weather in Bangalore?')">🌆 Bangalore</button>
+            <button class="qchip" onclick="inject('5 day forecast for Sydney')">🦘 Sydney</button>
+            <button class="qchip" onclick="inject('Will it rain in Delhi tomorrow?')">🌧️ Delhi rain</button>
+            <button class="qchip" onclick="inject('Is it hot in Dubai right now?')">🔥 Dubai</button>
+          </div>
+          <span class="msg-ts">NOW</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-zone">
+      <div class="input-shell">
+        <span class="inp-prefix">⌨️</span>
+        <textarea id="userInput" class="chat-ta" rows="1"
+          placeholder="Ask anything about the weather, anywhere..."
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button id="sendBtn" class="send-btn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"/>
+          </svg>
+        </button>
+      </div>
+      <p class="inp-hint">Groq · Llama 3.3 70B · OpenWeather API · Flask Backend</p>
+    </div>
+  </main>
+</div>
+
+<!-- TICKER -->
+<div class="ticker" style="padding-bottom:0">
+  <div class="ticker-inner">
+    <span>⛅ NIMBUS AI CHAT</span><span class="ticker-sep">◆</span>
+    <span>FUNCTION CALLING LIVE</span><span class="ticker-sep">◆</span>
+    <span>LLAMA 3.3 70B</span><span class="ticker-sep">◆</span>
+    <span id="tickerTime"></span><span class="ticker-sep">◆</span>
+    <span>⛅ NIMBUS AI CHAT</span><span class="ticker-sep">◆</span>
+    <span>FUNCTION CALLING LIVE</span><span class="ticker-sep">◆</span>
+    <span>LLAMA 3.3 70B</span><span class="ticker-sep">◆</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="app.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

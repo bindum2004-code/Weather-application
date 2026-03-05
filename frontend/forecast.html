@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Forecast — Nimbus</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="fc-page">
+<canvas id="bgCanvas"></canvas>
+<div class="c-dot"></div><div class="c-ring"></div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">⛅</div><span class="logo-word">NIMBUS</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"     class="nav-link">Home</a>
+    <a href="chat.html"      class="nav-link">AI Chat</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="forecast.html"  class="nav-link active">Forecast</a>
+  </div>
+  <div class="nav-r">
+    <button class="theme-btn" id="themeToggle"><span id="themeIcon">☀️</span></button>
+  </div>
+  <button class="hamburger" id="hamburger">☰</button>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="index.html">Home</a><a href="chat.html">AI Chat</a>
+  <a href="dashboard.html">Dashboard</a><a href="forecast.html">Forecast</a>
+</div>
+
+<div class="page-wrap">
+
+  <div class="page-hd">
+    <div class="page-hd-left">
+      <div class="sec-eyebrow">Prediction</div>
+      <div class="pg-title">5-DAY FORECAST</div>
+      <div class="pg-sub">Plan ahead with detailed weather predictions</div>
+    </div>
+    <div class="search-row">
+      <input id="fcCity" class="search-inp" placeholder="Enter city name…"
+             onkeydown="if(event.key==='Enter') loadForecast()"/>
+      <button id="fcBtn" class="search-go" onclick="loadForecast()">Search</button>
+    </div>
+  </div>
+
+  <!-- Quick pills -->
+  <div class="pill-row">
+    <button class="pill" onclick="qf('London')">🇬🇧 London</button>
+    <button class="pill" onclick="qf('New York')">🇺🇸 New York</button>
+    <button class="pill" onclick="qf('Tokyo')">🇯🇵 Tokyo</button>
+    <button class="pill" onclick="qf('Mumbai')">🇮🇳 Mumbai</button>
+    <button class="pill" onclick="qf('Sydney')">🇦🇺 Sydney</button>
+    <button class="pill" onclick="qf('Dubai')">🇦🇪 Dubai</button>
+    <button class="pill" onclick="qf('Paris')">🇫🇷 Paris</button>
+    <button class="pill" onclick="qf('Berlin')">🇩🇪 Berlin</button>
+  </div>
+
+  <!-- Current conditions band -->
+  <div class="cur-band" id="curBand" style="display:none">
+    <span class="cb-icon" id="cbIcon">🌤️</span>
+    <div>
+      <div class="cb-city" id="cbCity">—</div>
+      <div class="cb-temp" id="cbTemp">—</div>
+      <div class="cb-desc" id="cbDesc">—</div>
+    </div>
+  </div>
+
+  <!-- 5-day grid -->
+  <div>
+    <div class="sec-title">📅 Daily Forecast</div>
+    <div class="fcast-grid" id="fcastGrid">
+      <div class="placeholder" style="grid-column:1/-1">
+        <span class="ph-ico">🌤️</span>
+        <div class="ph-txt">Enter a city above to see the 5-day forecast</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hourly -->
+  <div id="hourlyBlock" style="display:none">
+    <div class="sec-title">⏰ Hourly Timeline</div>
+    <div class="hourly-wrap"><div class="hourly-track" id="hourlyTrack"></div></div>
+  </div>
+
+  <!-- Tips -->
+  <div id="tipsBlock" style="display:none">
+    <div class="sec-title">💡 Weather Tips</div>
+    <div class="tips-grid" id="tipsGrid"></div>
+  </div>
+
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>🗓️ 5-DAY FORECAST</span><span class="ticker-sep">◆</span>
+    <span id="tickerTime"></span><span class="ticker-sep">◆</span>
+    <span>OPENWEATHER PREDICTIONS</span><span class="ticker-sep">◆</span>
+    <span>HOURLY TIMELINE</span><span class="ticker-sep">◆</span>
+    <span>AI WEATHER TIPS</span><span class="ticker-sep">◆</span>
+    <span>🗓️ 5-DAY FORECAST</span><span class="ticker-sep">◆</span>
+    <span>OPENWEATHER PREDICTIONS</span><span class="ticker-sep">◆</span>
+    <span>AI WEATHER TIPS</span><span class="ticker-sep">◆</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="app.js"></script>
+<script src="forecast.js"></script>
+</body>
+</html>

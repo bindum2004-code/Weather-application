@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Dashboard — Nimbus</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="db-page">
+<canvas id="bgCanvas"></canvas>
+<div class="c-dot"></div><div class="c-ring"></div>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-mark">⛅</div><span class="logo-word">NIMBUS</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"     class="nav-link">Home</a>
+    <a href="chat.html"      class="nav-link">AI Chat</a>
+    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+    <a href="forecast.html"  class="nav-link">Forecast</a>
+  </div>
+  <div class="nav-r">
+    <button class="theme-btn" id="themeToggle"><span id="themeIcon">☀️</span></button>
+  </div>
+  <button class="hamburger" id="hamburger">☰</button>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="index.html">Home</a><a href="chat.html">AI Chat</a>
+  <a href="dashboard.html">Dashboard</a><a href="forecast.html">Forecast</a>
+</div>
+
+<div class="page-wrap">
+
+  <div class="page-hd">
+    <div class="page-hd-left">
+      <div class="sec-eyebrow">Live Data</div>
+      <div class="pg-title">WEATHER DASHBOARD</div>
+      <div class="pg-sub">Real-time metrics for any city worldwide</div>
+    </div>
+    <div class="search-row">
+      <input id="dashCity" class="search-inp" placeholder="Enter city name…"
+             onkeydown="if(event.key==='Enter') loadDash()"/>
+      <button id="dashBtn" class="search-go" onclick="loadDash()">Search</button>
+    </div>
+  </div>
+
+  <!-- Hero card -->
+  <div class="wx-hero">
+    <div class="wx-hero-inner">
+      <div class="wxh-l">
+        <div class="wxh-city" id="wxCity">Search a city to begin</div>
+        <div class="wxh-temp" id="wxTemp">—</div>
+        <div class="wxh-cond" id="wxCond">—</div>
+        <div class="wxh-date" id="wxDate"></div>
+      </div>
+      <div class="wxh-r">
+        <span class="wxh-icon" id="wxIcon">🌍</span>
+        <div class="wxh-feels" id="wxFeels"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metric-grid">
+    <div class="metric-tile">
+      <span class="mt-icon">💧</span>
+      <div class="mt-label">Humidity</div>
+      <div class="mt-value" id="mHumid">—</div>
+      <div class="mt-bar"><div class="mt-fill fill-a" id="mHumidBar" style="width:0%"></div></div>
+      <div class="mt-bg">RH</div>
+    </div>
+    <div class="metric-tile">
+      <span class="mt-icon">💨</span>
+      <div class="mt-label">Wind Speed</div>
+      <div class="mt-value" id="mWind">—</div>
+      <div class="mt-bar"><div class="mt-fill fill-b" id="mWindBar" style="width:0%"></div></div>
+      <div class="mt-bg">WS</div>
+    </div>
+    <div class="metric-tile">
+      <span class="mt-icon">👁️</span>
+      <div class="mt-label">Visibility</div>
+      <div class="mt-value" id="mVis">—</div>
+      <div class="mt-bar"><div class="mt-fill fill-c" id="mVisBar" style="width:0%"></div></div>
+      <div class="mt-bg">VI</div>
+    </div>
+    <div class="metric-tile">
+      <span class="mt-icon">🔵</span>
+      <div class="mt-label">Pressure</div>
+      <div class="mt-value" id="mPres">—</div>
+      <div class="mt-bar"><div class="mt-fill fill-d" id="mPresBar" style="width:50%"></div></div>
+      <div class="mt-bg">HP</div>
+    </div>
+    <div class="metric-tile">
+      <span class="mt-icon">⬇️</span>
+      <div class="mt-label">Min Temp</div>
+      <div class="mt-value" id="mMin">—</div>
+      <div class="mt-bg">LO</div>
+    </div>
+    <div class="metric-tile">
+      <span class="mt-icon">⬆️</span>
+      <div class="mt-label">Max Temp</div>
+      <div class="mt-value" id="mMax">—</div>
+      <div class="mt-bg">HI</div>
+    </div>
+  </div>
+
+  <!-- World cities -->
+  <div>
+    <div class="sec-title">🌍 World Cities — Live</div>
+    <div class="world-grid" id="worldGrid">
+      <div style="grid-column:1/-1;padding:2rem;text-align:center;font-style:italic;color:var(--text3);font-family:var(--f-mono);font-size:.75rem">Loading world cities…</div>
+    </div>
+  </div>
+
+  <!-- Quick pills -->
+  <div>
+    <div class="sec-title" style="font-size:1rem;margin-bottom:.7rem">Quick Load</div>
+    <div class="pill-row">
+      <button class="pill" onclick="ql('London')">🇬🇧 London</button>
+      <button class="pill" onclick="ql('New York')">🇺🇸 New York</button>
+      <button class="pill" onclick="ql('Tokyo')">🇯🇵 Tokyo</button>
+      <button class="pill" onclick="ql('Mumbai')">🇮🇳 Mumbai</button>
+      <button class="pill" onclick="ql('Dubai')">🇦🇪 Dubai</button>
+      <button class="pill" onclick="ql('Sydney')">🇦🇺 Sydney</button>
+      <button class="pill" onclick="ql('Paris')">🇫🇷 Paris</button>
+      <button class="pill" onclick="ql('Berlin')">🇩🇪 Berlin</button>
+      <button class="pill" onclick="ql('Singapore')">🇸🇬 Singapore</button>
+      <button class="pill" onclick="ql('Cairo')">🇪🇬 Cairo</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>📊 WEATHER DASHBOARD</span><span class="ticker-sep">◆</span>
+    <span id="tickerTime"></span><span class="ticker-sep">◆</span>
+    <span>LIVE DATA FEED</span><span class="ticker-sep">◆</span>
+    <span>OPENWEATHER API</span><span class="ticker-sep">◆</span>
+    <span>📊 WEATHER DASHBOARD</span><span class="ticker-sep">◆</span>
+    <span>LIVE DATA FEED</span><span class="ticker-sep">◆</span>
+    <span>OPENWEATHER API</span><span class="ticker-sep">◆</span>
+  </div>
+</div>
+
+<script src="bg.js"></script>
+<script src="app.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
